@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:pmalacho-mit/suede-dependency-template.git
+	branch = main
+	commit = f812f579de959926ca80849cf13c06951cbef6e9
+	parent = 9d3e98c79c5ab068f078fc81433a100de862ff14
+	method = merge
+	cmdver = 0.4.9

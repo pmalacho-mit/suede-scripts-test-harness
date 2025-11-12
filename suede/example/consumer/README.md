@@ -1,0 +1,1 @@
+# subrepo-dependency-management-example-consumer

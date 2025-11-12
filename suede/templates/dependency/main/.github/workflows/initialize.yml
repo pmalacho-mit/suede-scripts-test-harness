@@ -1,0 +1,51 @@
+name: Initialization procedure
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-dist-subrepo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install git-subrepo
+        shell: bash
+        run: |
+          git clone https://github.com/ingydotnet/git-subrepo ~/.git-subrepo
+          echo "$HOME/.git-subrepo/lib" >> "$GITHUB_PATH"
+
+      - name: Check git-subrepo installation
+        shell: bash
+        run: git subrepo --version
+
+      - name: Configure git identity for commits
+        shell: bash
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
+      - name: Create dist subrepo clone
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORIGIN_URL="$(git remote get-url origin 2>/dev/null || true)"
+          if [[ -z "$ORIGIN_URL" ]]; then
+            echo "Error: could not find 'origin' remote URL." >&2
+            exit 1
+          fi
+
+          if [[ -d "dist" && -n "$(ls -A dist 2>/dev/null)" ]]; then
+            echo "Error: './dist' already exists and is not empty. Remove it or choose another directory before running." >&2
+            exit 1
+          fi
+
+          git subrepo clone --branch=dist "$ORIGIN_URL" dist
+          echo "Pushing 'main'..."
+          git push -u origin main
